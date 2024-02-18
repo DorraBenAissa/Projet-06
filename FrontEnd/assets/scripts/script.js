@@ -1,31 +1,53 @@
 
 
 const buttonAll = document.querySelector(".filter__btn-id-null");
+const buttonId1 = document.querySelector(".filter__btn-id-1");
+const buttonId2 = document.querySelector(".filter__btn-id-2");
+const buttonId3 = document.querySelector(".filter__btn-id-3");
+
+const gallery = document.querySelector('.gallery');
+
+let data = null;
+
+function resetGallery() {  
+	gallery.innerHTML = "";
+}
 
 // Récupérer dynamiquement les données des travaux via l’API
-async function generationProjets() {
+async function generationProjets(data, id) {
     const response = await fetch('http://localhost:5678/api/works'); 
     data = await response.json();
     console.log('data= ', data);
+    resetGallery();
 
-    for (let i = 0; i < data.length; i++) {
-        const figure = document.createElement('figure');
-        const image = document.createElement('img');
-        const figcaption = document.createElement('figcaption');
+        if ([1, 2, 3].includes(id)) {
+            data = data.filter(data => data.categoryId == id);}
+            console.log('data= ', data);
 
+        for (let i = 0; i < data.length; i++) {
+            const figure = document.createElement('figure');
+            const image = document.createElement('img');
+            const figcaption = document.createElement('figcaption');
 
-        const gallery = document.querySelector('.gallery');
-        gallery.appendChild(figure);
+            gallery.appendChild(figure);
 
-        image.src = data[i].imageUrl;
-        figure.appendChild(image);
+            image.src = data[i].imageUrl;
+            figure.appendChild(image);
 
-        figcaption.innerHTML = data[i].title;
-        figure.appendChild(figcaption);
-    }
+            figcaption.innerHTML = data[i].title;
+            figure.appendChild(figcaption);
+        }
 
 }
 
+
 // Ajouter le tri des projets par catégorie dans la galerie
-buttonAll.addEventListener("click", () => { 
-    generationProjets();})
+buttonAll.addEventListener("click", () => { // Tous
+        generationProjets(data, null);})
+buttonId1.addEventListener("click", () => { // Objets
+        generationProjets(data, 1);})
+buttonId2.addEventListener("click", () => { // Appartements
+        generationProjets(data, 2);})
+buttonId3.addEventListener("click", () => { // Hôtels & restaurants
+        generationProjets(data, 3);})
+    
