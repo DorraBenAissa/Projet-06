@@ -8,6 +8,7 @@ const buttonId3 = document.querySelector(".filter__btn-id-3");
 const gallery = document.querySelector('.gallery');
 
 let data = null;
+generationProjets(data, null);
 
 function resetGallery() {  
 	gallery.innerHTML = "";
@@ -23,6 +24,11 @@ async function generationProjets(data, id) {
         if ([1, 2, 3].includes(id)) {
             data = data.filter(data => data.categoryId == id);}
             console.log('data= ', data);
+
+                    // Change la couleur du bouton en fonction du filtre
+            document.querySelectorAll(".filter__btn").forEach(btn => {
+                btn.classList.remove("filter__btn--active");})
+            document.querySelector(`.filter__btn-id-${id}`).classList.add("filter__btn--active");
 
         for (let i = 0; i < data.length; i++) {
             const figure = document.createElement('figure');
