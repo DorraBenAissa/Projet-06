@@ -23,7 +23,7 @@
 				<li>contact</li>
 			</a>
 			<a href="login.html">
-				<li>login</li>
+				<li class = 'isLogged'>login</li>
 			</a>
 			<a href="https://www.instagram.com" target="_blank">
 				<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
@@ -32,6 +32,19 @@
 	</nav>
 </header>
 <main>
+	<aside id="modale" class="modale" aria-hidden="true" style="display: none;">
+		<div class="modale-wrapper js-modale-stop">
+			<a href="" class="js-modale-close">
+				<i class="fa-solid fa-xmark"></i>
+			</a>
+			<h2>Galerie photo</h2>
+			<div class="js-admin-projets">
+				<!-- generation des photos dynamiquement -->
+			</div>
+			<a href="#modaleProjet" class="js-modale-projet">Ajouter un projet</a>
+		</div>
+	</aside>
+
 	<section id="introduction">
 		<figure>
 			<img src="./assets/images/sophie-bluel.png" alt="">
@@ -44,7 +57,13 @@
 		</article>
 	</section>
 	<section id="portfolio">
-		<h2>Mes Projets</h2>
+		<div class="portfolio-title">
+			<h2>Mes Projets</h2>
+			<div class="admin__modifer" aria-hidden="true" style="display: none;">
+				<i class="fa-solid fa-pen-to-square"></i>
+				<a href="#modale" class="js-modale">Modifier</a>
+			</div>
+		</div>
 		<div class="filters">
 			<button class="filter__btn filter__btn-id-null filter__btn--active">Tous</button>
 			<button class="filter__btn filter__btn-id-1">Objets</button>

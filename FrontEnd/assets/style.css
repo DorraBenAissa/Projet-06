@@ -82,6 +82,7 @@ h2 {
   font-size: 30px;
   color: #1D6154;
 }
+
 #portfolio h2 {
 	text-align: center;
 }
@@ -89,6 +90,57 @@ h2 {
 .portfolio-title h2 {
   margin: 0 25px 0 0;
 }
+
+.portfolio-title {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  }
+
+  .js-admin-projets::after {
+	display: flex;
+	content: " ";
+	border-top: 1px solid black;
+	height: 1px;
+	width: 90%;
+	margin: 40px auto;
+  }
+  
+  .js-admin-projets {
+	width: 550px;
+	margin: 10px auto;
+	display: flex;
+	flex-wrap: wrap;
+  }
+
+  .gallery__item-modale {
+	display: flex;
+	flex-direction: column;
+	margin: 0 5px;
+	width: 95px;
+  }
+  
+  .gallery__item-modale img {
+	width: 95px;
+	height: 120px;
+	-o-object-fit: cover;
+	   object-fit: cover;
+	margin-bottom: 5px;
+  }
+
+  .gallery__item-modale p {
+	position: relative;
+	bottom: 116px;
+	left: 68px;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+  }
+  
+  .gallery__item-modale a {
+	position: relative;
+	bottom: 15px;
+  }
 
 nav ul {
   display: flex;

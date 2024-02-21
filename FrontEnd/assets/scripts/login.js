@@ -2,6 +2,8 @@ const loginMdpError = document.querySelector(".loginMdp__error");
 const email = document.getElementById("email");
 const password = document.getElementById("password");
 
+var token = localStorage.removeItem("token");
+
 const submit = document.getElementById("submit");
 
 
@@ -15,6 +17,7 @@ submit.addEventListener("click", () => {
 })
 
 async function login(user) {
+    loginMdpError.innerHTML = "";
     const response = await fetch('http://localhost:5678/api/users/login', {
         method: 'POST',
         headers: {
@@ -26,6 +29,7 @@ async function login(user) {
     console.log('dataLogin= ', data);
 
     if (response.status == 200){
+        localStorage.setItem("token", data.token);
         window.location.href = "index.html";
     }
     else {
@@ -35,3 +39,4 @@ async function login(user) {
 
     }
 }
+//token = localStorage.removeItem("token");
