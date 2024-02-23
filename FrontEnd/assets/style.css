@@ -129,23 +129,24 @@ h2 {
   }
 
   .gallery__item-modale p {
-	position: relative;
-	bottom: 116px;
-	left: 68px;
-	width: 30px;
-	height: 30px;
-	cursor: pointer;
-  }
-  
-  .gallery__item-modale a {
-	position: relative;
-	bottom: 15px;
-  }
+  position: relative;
+  bottom: 116px;
+  left: 68px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.gallery__item-modale a {
+  position: relative;
+  bottom: 15px;
+}
 
 nav ul {
   display: flex;
   align-items: center;
   list-style-type: none;
+  color:black;
 }
 
 nav li {
@@ -153,9 +154,9 @@ nav li {
   font-size: 1.2em;
 }
 
-li:hover {
+/* li:hover {
   color: #B1663C;
-}
+} */
 
 #introduction {
   display: flex;
@@ -728,9 +729,11 @@ html {
 
 a {
   text-decoration: none;
-  color: #1D6154;
+  color: #000000;
 }
-
+.login {
+  font-weight: bold;
+}
 header {
   display: flex;
   justify-content: space-between;

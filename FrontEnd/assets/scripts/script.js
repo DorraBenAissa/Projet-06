@@ -5,6 +5,13 @@ const buttonId3 = document.querySelector(".filter__btn-id-3");
 
 const gallery = document.querySelector('.gallery');
 
+const modaleAjout = document.querySelector(".modale-projet");
+const btnAjout = document.querySelector(".js-modale-projet");
+
+const btnListCategory = document.querySelector(".js-categoryId");
+
+const btnCreateWorks = document.querySelector(".js-add-work");
+
 let data = null;
 generationProjets(data, null);
 
@@ -79,11 +86,34 @@ if (token) {
     buttonCloseModale.addEventListener("click", () => { 
         modale.setAttribute("aria-hidden");
     });
-}
+
+    btnAjout.addEventListener("click", () => { // Tous
+        modaleAjout.removeAttribute("aria-hidden");
+        modaleAjout.removeAttribute("style");
+        getCategory();
+    });
+
+    // Au clic, on envoie les valeurs de connextion
+    btnCreateWorks.addEventListener("click", () => {
+        const image = document.querySelector(".js-image").files[0];
+        const title = document.getElementById("titre");
+        const optionCategory = document.querySelector(".option_class");
+
+    // let works = {
+    //     image: image,
+    //     title: title.value,
+    //     category: btnListCategory.value
+    // };
+    const formData = new FormData();
+        formData.append("title", title.value);
+        formData.append("category", optionCategory.value);
+        formData.append("image", image);
+    postProjets(formData);
+})
 
 function resetmodaleSectionProjets() {  
 	works.innerHTML = "";
-}
+}}
 
 async function generateWorksForModale() {
     const response = await fetch('http://localhost:5678/api/works'); 
@@ -143,3 +173,54 @@ async function refreshPage(i){
     const projet = document.querySelector(`.js-projet-${i}`);
     projet.style.display = "none";
 }
+
+
+async function getCategory() {
+    const response = await fetch('http://localhost:5678/api/categories'); 
+    var data = await response.json();
+    console.log ('category =', data);
+    btnListCategory.innerHTML='';
+    
+    for (let i = 0; i < data.length; i++) {
+        const option = document.createElement("option");
+        option.innerHTML = data[i].name;
+        option.value = data[i].id;
+        option.classList.add("option_class");
+        btnListCategory.appendChild(option);
+    }
+}
+
+
+
+async function postProjets(works) {
+    console.log('works=',works);
+    const response = await fetch("http://localhost:5678/api/works", {
+         method: "POST",
+         headers: { Authorization: `Bearer ${token}`},
+         body: works,
+     });
+     if (response.status === 201) {
+         console.log ('le projet a été ajouté avec succé');
+         alert("Projet ajouté avec succès :)");
+         generateWorksForModale();
+         backToModale ();
+         generationProjets(data, null);
+
+     }else if (response.status === 400) {
+        alert("Merci de remplir tous les champs");
+    } else if (response.status === 500) {
+        alert("Erreur serveur");
+    }else if (response.status === 401) {
+        alert("Vous n'êtes pas autorisé à ajouter un projet");
+        window.location.href = "login.html";
+    } else {
+console.log('response.status = ', response.status);
+    }
+    
+ }
+
+ function backToModale () {
+    modaleAjout.style.display = "none";
+};
+
+ 
