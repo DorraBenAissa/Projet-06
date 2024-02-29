@@ -1,7 +1,21 @@
-const buttonAll = document.querySelector(".filter__btn-id-null");
-const buttonId1 = document.querySelector(".filter__btn-id-1");
-const buttonId2 = document.querySelector(".filter__btn-id-2");
-const buttonId3 = document.querySelector(".filter__btn-id-3");
+// const buttonAll = document.querySelector(".filter__btn-id-null");
+// const buttonId1 = document.querySelector(".filter__btn-id-1");
+// const buttonId2 = document.querySelector(".filter__btn-id-2");
+// const buttonId3 = document.querySelector(".filter__btn-id-3");
+
+const filters = document.querySelector('.filters');
+const buttonAll = document.createElement('button');
+buttonAll.classList.add(`filter__btn`);
+buttonAll.classList.add(`filter__btn-id-null`);
+buttonAll.classList.add(`filter__btn--active`);
+buttonAll.innerHTML =  'Tous';
+filters.appendChild(buttonAll);
+
+// let dataCategory;
+getCategory("isFilterButton");
+
+  
+
 
 const gallery = document.querySelector('.gallery');
 
@@ -26,12 +40,14 @@ async function generationProjets(data, id) {
     resetGallery();
 
         if ([1, 2, 3].includes(id)) {
-            data = data.filter(data => data.categoryId == id);}
+            data = data.filter(data => data.categoryId == id);
+        }
             console.log('data= ', data);
 
-                    // Change la couleur du bouton en fonction du filtre
+// Change la couleur du bouton en fonction du filtre
             document.querySelectorAll(".filter__btn").forEach(btn => {
-                btn.classList.remove("filter__btn--active");})
+                btn.classList.remove("filter__btn--active");
+            })
             document.querySelector(`.filter__btn-id-${id}`).classList.add("filter__btn--active");
 
         for (let i = 0; i < data.length; i++) {
@@ -41,7 +57,8 @@ async function generationProjets(data, id) {
             const figcaption = document.createElement('figcaption');
 
             gallery.appendChild(figure);
-
+            figure.classList.add(`js-projet-${data[i].id}`);
+            
             image.src = data[i].imageUrl;
             figure.appendChild(image);
 
@@ -54,12 +71,12 @@ async function generationProjets(data, id) {
 // Ajouter le tri des projets par catégorie dans la galerie
 buttonAll.addEventListener("click", () => { // Tous
         generationProjets(data, null);})
-buttonId1.addEventListener("click", () => { // Objets
-        generationProjets(data, 1);})
-buttonId2.addEventListener("click", () => { // Appartements
-        generationProjets(data, 2);})
-buttonId3.addEventListener("click", () => { // Hôtels & restaurants
-        generationProjets(data, 3);})
+// buttonId1.addEventListener("click", () => { // Objets
+//         generationProjets(data, 1);})
+// buttonId2.addEventListener("click", () => { // Appartements
+//         generationProjets(data, 2);})
+// buttonId3.addEventListener("click", () => { // Hôtels & restaurants
+//         generationProjets(data, 3);})
 
 const AlredyLogged = document.querySelector(".isLogged");
 var token = localStorage.getItem("token");
@@ -90,34 +107,35 @@ if (token) {
     btnAjout.addEventListener("click", () => { // Tous
         modaleAjout.removeAttribute("aria-hidden");
         modaleAjout.removeAttribute("style");
-        getCategory();
+        var data = getCategory("isPickList");
+
     });
 
-    // Au clic, on envoie les valeurs de connextion
     btnCreateWorks.addEventListener("click", () => {
         const image = document.querySelector(".js-image").files[0];
-        const title = document.getElementById("titre");
-        const optionCategory = document.querySelector(".option_class");
+        const title = document.getElementById("titre").value;
+        const optionCategory = document.querySelector(".option_class").value;
 
-    // let works = {
-    //     image: image,
-    //     title: title.value,
-    //     category: btnListCategory.value
-    // };
-    const formData = new FormData();
-        formData.append("title", title.value);
-        formData.append("category", optionCategory.value);
-        formData.append("image", image);
-    postProjets(formData);
-})
+        // let works = {
+        //     image: image,
+        //     title: title.value,
+        //     category: btnListCategory.value
+        // };
+        const formData = new FormData();
+            formData.append("title", title);
+            formData.append("category", optionCategory);
+            formData.append("image", image);
+        postProjets(formData);
+    })
 
-function resetmodaleSectionProjets() {  
-	works.innerHTML = "";
-}}
+    function resetmodaleSectionProjets() {  
+        works.innerHTML = "";
+    }
+}
 
 async function generateWorksForModale() {
     const response = await fetch('http://localhost:5678/api/works'); 
-    var data = await response.json();
+    var data  = await response.json();
 
     console.log("generateWorksOnModale = ",data);
 
@@ -171,14 +189,41 @@ async function refreshPage(i){
 
     // supprime le projet de la page d'accueil
     const projet = document.querySelector(`.js-projet-${i}`);
-    projet.style.display = "none";
+    if (projet != null) {
+        projet.style.display = "none";
+    }
+    
 }
 
 
-async function getCategory() {
+async function getCategory(origine) {
     const response = await fetch('http://localhost:5678/api/categories'); 
     var data = await response.json();
+    dataCategory = data;
     console.log ('category =', data);
+
+    if (origine == 'isFilterButton') {
+        constructionFiltreButtonDom(data);
+    } else {
+        constructionPicklistDom(data);
+    }
+}
+
+function constructionFiltreButtonDom (data) {
+    for (let i = 0; i < data.length; i++) {
+        const buttonCategory = document.createElement('button');   
+        buttonCategory.classList.add(`filter__btn-id-${data[i].id}`);
+        buttonCategory.classList.add(`filter__btn`);
+        buttonCategory.innerHTML =  data[i].name;
+        filters.appendChild(buttonCategory);
+
+        buttonCategory.addEventListener("click", () => {
+                     generationProjets(data, data[i].id);})
+
+    }
+}
+
+function constructionPicklistDom (data) {
     btnListCategory.innerHTML='';
     
     for (let i = 0; i < data.length; i++) {
@@ -193,28 +238,38 @@ async function getCategory() {
 
 
 async function postProjets(works) {
-    console.log('works=',works);
-    const response = await fetch("http://localhost:5678/api/works", {
-         method: "POST",
-         headers: { Authorization: `Bearer ${token}`},
-         body: works,
-     });
-     if (response.status === 201) {
-         console.log ('le projet a été ajouté avec succé');
-         alert("Projet ajouté avec succès :)");
-         generateWorksForModale();
-         backToModale ();
-         generationProjets(data, null);
+    try {
 
-     }else if (response.status === 400) {
-        alert("Merci de remplir tous les champs");
-    } else if (response.status === 500) {
-        alert("Erreur serveur");
-    }else if (response.status === 401) {
-        alert("Vous n'êtes pas autorisé à ajouter un projet");
-        window.location.href = "login.html";
-    } else {
-console.log('response.status = ', response.status);
+        var object = {};
+        works.forEach(function(value, key){
+            object[key] = value;
+        });
+        var json = JSON.stringify(object);
+        console.log('json = ', json);
+
+        var response = await fetch('http://localhost:5678/api/works', {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}`},
+            body: works,
+        });
+        if (response.status === 201) {
+            console.log ('le projet a été ajouté avec succé');
+            generateWorksForModale();
+            backToModale ();
+            generationProjets(data, null);
+
+        }else if (response.status === 400) {
+            console.log('response.status = ', response.status);
+        } else if (response.status === 500) {
+            console.log('response.status = ', response.status);
+        }else if (response.status === 401) {
+            console.log('response.status = ', response.status);
+            window.location.href = "login.html";
+        } else {
+            console.log('response.status = ', response.status);
+        }
+    }catch (error) {
+        console.log(error);
     }
     
  }
