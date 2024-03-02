@@ -87,8 +87,88 @@ h2 {
 	text-align: center;
 }
 
+.errorMessage {
+  color : red;
+}
+
 .portfolio-title h2 {
   margin: 0 25px 0 0;
+}
+
+.preview {
+  display: flex;
+  justify-content: center;
+}
+
+#preview-input {
+  position: absolute;
+  height: 200px;
+  width: 175px;
+}
+
+.contain_modal2 {
+  width: 70%;
+  margin-top: 20px;
+}
+
+.image_input {
+  width: 100%;
+  height: 200px;
+  background-color: #e8f1f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button_add_picture {
+  background-color: #cbd6dc;
+  color: #306685;
+  border-radius: 60px;
+  margin: 20px 0;
+  padding: 10px 31px;
+  cursor: pointer;
+  border: 0px;
+}
+
+.preview_text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.button_send_new_work {
+  background-color: #a7a7a7;
+  color: white;
+  border-radius: 60px;
+  margin: 20px 0;
+  padding: 10px 31px;
+  cursor: pointer;
+  border: 0px;
+}
+
+.form_modal2 {
+  display: flex;
+  flex-direction: column;
+}
+
+#category-input {
+  width: 100%;
+  height: 51px;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+  border: 0px;
+}
+
+#title-input {
+  width: 100%;
+  height: 51px;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+
+.fa-image {
+  font-size: 50px;
+  color: #cbd6dc;
 }
 
 .portfolio-title {
@@ -338,6 +418,24 @@ html {
 .form-group-photo label:hover {
   background-color: #306685;
   color: white;
+}
+
+.banner {
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.banner_text {
+  color: #fff;
+  margin-right: 15px;
 }
 
 .modale-projet-form input[type=submit]:hover {
@@ -633,7 +731,7 @@ html {
   align-items: center;
   background-color: #E8F1F7;
   width: 500px;
-  height: 200px;
+  height: 275px;
   border-radius: 10px;
 }
 
@@ -642,7 +740,7 @@ html {
   font-size: 90px;
   font-weight: 100;
   margin: 20px;
-  margin-top: -25px;
+  margin-top: 23px;
 }
 
 .form-group-photo input {
@@ -660,11 +758,20 @@ html {
   color: #306685;
   border-radius: 50px;
   cursor: pointer;
-  margin-top: -10px;
+  margin-top: 75px
+}
+
+.js-add-work {
+  background-color: #a7a7a7;
+  color: white;
+  border-radius: 60px;
+  margin: 20px 0;
+  padding: 10px 31px;
+  cursor: pointer;
+  border: 0px;
 }
 
 .form-group-photo::after {
-  content: "jpg, png : 4mo max";
   position: absolute;
   top: 315px;
 }
@@ -707,8 +814,8 @@ html {
   font-family: "Syne";
   font-weight: 700;
   color: white;
-  background-color: #1D6154;
-  border: 2px solid #1D6154;
+  background-color: grey;
+  border: 2px solid grey;
   margin: 120px 0 30px 0;
   height: 50px;
   width: 250px;

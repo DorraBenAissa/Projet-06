@@ -3,6 +3,9 @@
 // const buttonId2 = document.querySelector(".filter__btn-id-2");
 // const buttonId3 = document.querySelector(".filter__btn-id-3");
 
+const form = document.querySelector("#modale-projet-form");
+const returnBtn = document.querySelector(".js-modale-return");
+
 const filters = document.querySelector('.filters');
 const buttonAll = document.createElement('button');
 buttonAll.classList.add(`filter__btn`);
@@ -14,7 +17,7 @@ filters.appendChild(buttonAll);
 // let dataCategory;
 getCategory("isFilterButton");
 
-  
+
 
 
 const gallery = document.querySelector('.gallery');
@@ -79,7 +82,7 @@ buttonAll.addEventListener("click", () => { // Tous
 //         generationProjets(data, 3);})
 
 const AlredyLogged = document.querySelector(".isLogged");
-var token = localStorage.getItem("token");
+const token = localStorage.getItem("token");
 const a = document.querySelector(".admin__modifer");
 
 const modale = document.querySelector(".modale");
@@ -88,6 +91,13 @@ const buttonCloseModale = document.querySelector(".js-modale-close");
 const works = document.querySelector(".js-admin-projets"); 
 
 if (token) {
+
+    let edition = document.querySelectorAll(".edition");
+    /* POUR BOUTONS MODIER ET BANNER */
+    edition.forEach((element) => {
+      element.hidden = false;
+    });
+
     AlredyLogged.innerHTML = "Logout";
     a.removeAttribute("aria-hidden");
     a.removeAttribute("style");
@@ -104,33 +114,27 @@ if (token) {
         modale.setAttribute("aria-hidden");
     });
 
+    var message = document.createElement("p");
+    message.classList.add("errorMessage");
+    
     btnAjout.addEventListener("click", () => { // Tous
         modaleAjout.removeAttribute("aria-hidden");
         modaleAjout.removeAttribute("style");
         var data = getCategory("isPickList");
-
+        message.innerHTML =  '';
     });
 
-    btnCreateWorks.addEventListener("click", () => {
-        const image = document.querySelector(".js-image").files[0];
-        const title = document.getElementById("titre").value;
-        const optionCategory = document.querySelector(".option_class").value;
+    btnCreateWorks.addEventListener("click", postProjets);
 
-        // let works = {
-        //     image: image,
-        //     title: title.value,
-        //     category: btnListCategory.value
-        // };
-        const formData = new FormData();
-            formData.append("title", title);
-            formData.append("category", optionCategory);
-            formData.append("image", image);
-        postProjets(formData);
-    })
+    returnBtn.addEventListener("click", returnToModaleGallery);
 
     function resetmodaleSectionProjets() {  
         works.innerHTML = "";
     }
+}
+
+function returnToModaleGallery(){
+    modaleAjout.style.display = "none";
 }
 
 async function generateWorksForModale() {
@@ -226,6 +230,11 @@ function constructionFiltreButtonDom (data) {
 function constructionPicklistDom (data) {
     btnListCategory.innerHTML='';
     
+    const option0 = document.createElement("option");
+    option0.innerHTML = '';
+    option0.classList.add("option_class");
+    btnListCategory.appendChild(option0);
+
     for (let i = 0; i < data.length; i++) {
         const option = document.createElement("option");
         option.innerHTML = data[i].name;
@@ -237,42 +246,103 @@ function constructionPicklistDom (data) {
 
 
 
-async function postProjets(works) {
+const containerAjoutImage = document.querySelector(".form-group-photo");
+
+//let previewDiv = document.querySelector(".preview");
+
+// document.getElementById("image-input").addEventListener("change", function (e) {
+//   if (e.target.files[0]) {
+//     previewDiv.style.display = "flex";
+//   }
+// });
+
+//image.addEventListener("click", afficheImage);
+
+//function afficheImage(){
+    //previewDiv.style.display = "flex";
+    // containerAjoutImage.innerHTML = '';
+    // var selectedImage = document.createElement("IMG");
+    // selectedImage.setAttribute("src", URL.createObjectURL(image.files[0]));
+    // selectedImage.setAttribute("width", "304");
+    // selectedImage.setAttribute("height", "228");
+    // selectedImage.setAttribute("alt", "The Pulpit Rock");
+    // //selectedImage.src = URL.createObjectURL(image.files[0]); window.URL.createObjectURL(new Blob(image.files[0], {type: "application/zip"}))
+    // containerAjoutImage.appendChild(selectedImage);
+//}
+const optionCategory = '';
+async function postProjets(event) {
+    event.preventDefault();
     try {
+        const image = document.querySelector(".js-image").files[0];
+        const title = document.getElementById("titre").value;
+        var optionCategory = document.querySelector(".js-categoryId").value;
+
+        const formData = new FormData();
+            formData.append("title", title);
+            formData.append("category", optionCategory);
+            formData.append("image", image);
 
         var object = {};
-        works.forEach(function(value, key){
+        formData.forEach(function(value, key){
             object[key] = value;
         });
         var json = JSON.stringify(object);
         console.log('json = ', json);
 
-        var response = await fetch('http://localhost:5678/api/works', {
+        const response = await fetch("http://localhost:5678/api/works", {
             method: "POST",
-            headers: { Authorization: `Bearer ${token}`},
-            body: works,
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: formData,
         });
+        //form
+        
         if (response.status === 201) {
             console.log ('le projet a été ajouté avec succé');
+            message.innerHTML =  'Le projet a été ajouté avec succé';
             generateWorksForModale();
             backToModale ();
             generationProjets(data, null);
 
         }else if (response.status === 400) {
             console.log('response.status = ', response.status);
+            message.innerHTML =  'Merci de remplir tous les champs';
         } else if (response.status === 500) {
             console.log('response.status = ', response.status);
+            message.innerHTML =  'Erreur serveur';
         }else if (response.status === 401) {
             console.log('response.status = ', response.status);
+            message.innerHTML =  "Vous n'êtes pas autorisé à ajouter un projet";
             window.location.href = "login.html";
-        } else {
-            console.log('response.status = ', response.status);
         }
+        form.appendChild(message);
     }catch (error) {
         console.log(error);
     }
     
  }
+
+ let previewDiv = document.querySelector(".preview");
+
+document.getElementById("photo").addEventListener("change", function (e) {
+  if (e.target.files[0]) {
+    previewDiv.style.display = "flex";
+  }
+});
+
+form.addEventListener("input", function (event) {
+    let isValid = form.checkValidity();
+    if (isValid) {
+      document.querySelector(".js-add-work").disabled = false;
+      document.querySelector(".js-add-work").style.background =
+        "#1D6154";
+      document.querySelector(".js-add-work").style.color =
+        "white";
+    } else {
+      document.querySelector(".js-add-work").style.background = "grey";
+    }
+  });
 
  function backToModale () {
     modaleAjout.style.display = "none";
