@@ -218,15 +218,11 @@ async function postProjets(event) {
             generateWorksForModale();
             window.location.href = "index.html";
             generationProjets(data, null);
-
         }else if (response.status === 400) {
-
             message.innerHTML =  'Merci de remplir tous les champs';
         } else if (response.status === 500) {
-
-            message.innerHTML =  'Merci de remplir tous les champs';
+            message.innerHTML =  'Erreur serveur';
         }else if (response.status === 401) {
-
             message.innerHTML =  "Vous n'êtes pas autorisé à ajouter un projet";
             window.location.href = "login.html";
         }
