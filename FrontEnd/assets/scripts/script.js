@@ -19,7 +19,6 @@ const btnAjout = document.querySelector(".js-modale-projet");
 const btnListCategory = document.querySelector(".js-categoryId");
 const btnCreateWorks = document.querySelector(".js-add-work");
 const containerAjoutImage = document.querySelector(".form-group-photo");
-const formData = new FormData();
 
 buttonAll.classList.add(`filter__btn`);
 buttonAll.classList.add(`filter__btn-id-null`);
@@ -45,7 +44,7 @@ async function appelApiToGetCategories() {
     return await response.json();
 }
 
-async function appelApiToPostNewWork() { 
+async function appelApiToPostNewWork(formData) { 
     return await fetch("http://localhost:5678/api/works", {
         method: "POST",
         headers: {
@@ -198,10 +197,10 @@ async function postProjets(event) {
         var title = document.getElementById("titre").value;
         var optionCategory = document.querySelector(".js-categoryId").value;
 
-
-            formData.append("title", title);
-            formData.append("category", optionCategory);
-            formData.append("image", image);
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("category", optionCategory);
+        formData.append("image", image);
 
         var object = {};
         formData.forEach(function(value, key){
@@ -209,12 +208,11 @@ async function postProjets(event) {
         });
         var json = JSON.stringify(object);
         
-        response = await appelApiToPostNewWork();
+        response = await appelApiToPostNewWork(formData);
 
         //form
         
         if (response.status === 201) {
-            message.innerHTML =  'Le projet a été ajouté avec succé';
             generateWorksForModale();
             window.location.href = "index.html";
             generationProjets(data, null);
