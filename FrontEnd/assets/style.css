@@ -518,6 +518,11 @@ html {
   justify-content: flex-end;
 }
 
+.js-form-close {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .modale-wrapper h2 {
   display: flex;
   justify-content: center;

@@ -8,6 +8,7 @@ const a = document.querySelector(".admin__modifer");
 const modale = document.querySelector(".modale");
 const buttonModifier = document.querySelector(".js-modale");
 const buttonCloseModale = document.querySelector(".js-modale-close");
+const buttonCloseForm = document.querySelector(".js-form-close");
 const works = document.querySelector(".js-admin-projets"); 
 const form = document.querySelector("#modale-projet-form");
 const returnBtn = document.querySelector(".js-modale-return");
@@ -214,7 +215,6 @@ async function postProjets(event) {
         
         if (response.status === 201) {
             generateWorksForModale();
-            window.location.href = "index.html";
             generationProjets(data, null);
         }else if (response.status === 400) {
             message.innerHTML =  'Merci de remplir tous les champs';
@@ -271,8 +271,18 @@ if (token) {
 
     });
 
-    buttonCloseModale.addEventListener("click", () => { 
-        modale.setAttribute("aria-hidden");
+    buttonCloseModale.addEventListener("click", (e) => { 
+        e.preventDefault();
+        modale.setAttribute('aria-hidden', "true");
+        modale.style.display = "none";
+    });
+
+    buttonCloseForm.addEventListener("click", (e) => { 
+        e.preventDefault();
+        modaleAjout.setAttribute('aria-hidden', "true");
+        modaleAjout.style.display = "none";
+        modale.setAttribute('aria-hidden', "true");
+        modale.style.display = "none";
     });
 
     var message = document.createElement("p");
